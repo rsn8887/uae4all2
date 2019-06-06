@@ -60,6 +60,8 @@ static unsigned long ciaata_passed, ciaatb_passed, ciabta_passed, ciabtb_passed;
 static unsigned long ciaatod, ciabtod, ciaatol, ciabtol, ciaaalarm, ciabalarm;
 static int ciaatlatch, ciabtlatch;
 
+static int oldovl;
+
 static unsigned int ciabpra;
 
 unsigned int gui_ledstate;
@@ -550,26 +552,35 @@ static uae_u8 ReadCIAB (unsigned int addr)
 
 static void WriteCIAA (uae_u16 addr,uae_u8 val)
 {
-    int oldled, oldovl;
+    int oldled;
+	if ((currprefs.chipset_mask & CSMASK_AGA) && oldovl) {
+		int i = (allocated_chipmem>>16) > 32 ? allocated_chipmem >> 16 : 32;
+		map_banks (&chipmem_bank, 0, i, allocated_chipmem);
+		oldovl = 0;
+	}
+
     switch (addr & 0xf) {
     case 0:
-	oldovl = ciaapra & 1;
+	if (!(currprefs.chipset_mask & CSMASK_AGA)) {
+		oldovl = ciaapra & 1;
+	}
 	oldled = ciaapra & 2;
 	ciaapra = (ciaapra & ~0x3) | (val & 0x3);
 	gui_ledstate &= ~1;
 	gui_ledstate |= ((~ciaapra & 2) >> 1);
 	gui_data.powerled = ((~ciaapra & 2) >> 1);
 
-
-	if ((ciaapra & 1) != oldovl) {
-	    int i = (allocated_chipmem>>16) > 32 ? allocated_chipmem >> 16 : 32;
-	    
-	    if (oldovl || ersatzkickfile) {
-		map_banks (&chipmem_bank, 0, i, allocated_chipmem);
-	    } else {
-		/* Is it OK to do this for more than 2M of chip? */
-		map_banks (&kickmem_bank, 0, i, 0x80000);
-	    }
+	if (!(currprefs.chipset_mask & CSMASK_AGA)) {
+		if ((ciaapra & 1) != oldovl) {
+		    int i = (allocated_chipmem>>16) > 32 ? allocated_chipmem >> 16 : 32;
+		    
+		    if (oldovl || ersatzkickfile) {
+			map_banks (&chipmem_bank, 0, i, allocated_chipmem);
+		    } else {
+			/* Is it OK to do this for more than 2M of chip? */
+			map_banks (&kickmem_bank, 0, i, 0x80000);
+		    }
+		}
 	}
 	break;
     case 1:
@@ -781,6 +792,9 @@ void CIA_reset (void)
 
     if (!savestate_state)
     {
+	if (currprefs.chipset_mask & CSMASK_AGA) {
+		oldovl = 1;
+	}
     ciaatlatch = ciabtlatch = 0;
     ciaapra = 3; ciaaprb = ciaadra = ciaadrb = ciaasdr = 0;
     ciabprb = ciabdra = ciabdrb = ciabsdr = 0;
@@ -800,6 +814,9 @@ void CIA_reset (void)
     if (savestate_state)
     {
 	/* Reset oldovl and oldled */
+	if (currprefs.chipset_mask & CSMASK_AGA) {
+		oldovl = 1;
+	}
 	uae_u8 v = ReadCIAA (0);
 	WriteCIAA (0,3);
 	WriteCIAA (0,0);
