@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0)
 set(CMAKE_VERBOSE_MAKEFILE OFF)
 
 set(VERSION_MAJOR 1)
-set(VERSION_MINOR 98)
+set(VERSION_MINOR 99)
 
 if(BUILD_PSP2)
 if (NOT DEFINED CMAKE_TOOLCHAIN_FILE)
@@ -143,7 +143,7 @@ if(BUILD_PSP2)
           -DUSE_UAE4ALL_VKBD
           -DUSE_ARMV7
           -DUSE_ARMNEON
-          -marm -mfpu=neon -mcpu=cortex-a9 -march=armv7-a -mfloat-abi=hard -ffast-math
+          -marm -mfpu=neon -mtune=cortex-a9 -mfloat-abi=hard -ffast-math
           -fno-asynchronous-unwind-tables -funroll-loops
           -mword-relocations -fno-unwind-tables -fno-optimize-sibling-calls
           -mvectorize-with-neon-quad -funsafe-math-optimizations

@@ -38,6 +38,8 @@ void vkbd_reset_sticky_keys(void);
 
 extern int vkbd_mode;
 extern int vkbd_move;
+extern float vkbd_touch_x;
+extern float vkbd_touch_y;
 typedef struct
 {
 	int code; // amiga-side keycode

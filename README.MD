@@ -4,19 +4,9 @@ On the Switch, since v1.84, please use nsp injection to start uae4all2, otherwis
 
 Recent Changes
 ======
-1.98 (Switch only)
+1.99
 
-- recompile to add support for 9.0.0 firmware
-
-1.97 (Switch only)
-
-- add option to main menu that displays online instruction manual (opens web browser) 
-
-1.96
-
-- increase maximum displayed lines from 270 to 286, useful for overscan games like Babeanoid
-- fix cia overlay in AGA mode, fixes Reshoot-R hang at title screen
-- add instruction manual to Vita livearea screen
+- allow touch input to control on-screen keyboard in addition to dpad
 
 Description
 =====
@@ -40,7 +30,7 @@ Thanks to CrashMidnick for the French virtual keyboard.
 
 Thanks to the original authors Chui, john4p, TomB, notaz, Bernd Schneider, Toni Wilen, Pickle, smoku, AnotherGuest, Anonymous engineer, finkel, Lubomyr, pelya and many more.
 
-Thanks to my supporters on Patreon: Andyways, CountDuckula, Jason Crawford, Greg Gibson, Jesse Harlin, Özgür Karter, Matthew Machnee, Milenko, Ibrahim Fazel Poor, and RadicalR.
+Thanks to my supporters on Patreon: Andyways, Count Duckula, Jesse Harlin, Özgür Karter, Matthew Machnee, Mored4u, Ibrahim Fazel Poor, and RadicalR.
 
 Installation
 ======
@@ -96,6 +86,7 @@ Vita/Switch-exclusive Features
 - Config file management (load, save as, etc.)
 - Thumbnail previews for savestates
 - Four different on-screen keyboard styles: original, warm, cool, and dark
+- On-screen keyboard keys can be pressed via touch input in addition to dpad navigation
 
 Controls
 =====
@@ -267,7 +258,7 @@ Games with no fixes (or unknown fixes)
 
 - IK+  
   Issue: no sound fx  
-  Fix: unknown, but can play PlayStation 1 version in Retroarch instead. This requires cycle exact, which is not supported.  
+  Fix: unknown, but can play PlayStation 1 version in Retroarch instead. The Retroarch PUAE core can play this game correctly on Vita.  
 
 - Nebulus 2  
   Issue: doors are not showing  
@@ -326,6 +317,10 @@ Compiling
 
 CHANGELOG
 =====
+1.99
+
+- allow touch input to control on-screen keyboard, in addition to dpad
+
 1.98 (Switch only)
 
 - recompile to add support for 9.0.0 firmware

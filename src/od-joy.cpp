@@ -762,9 +762,12 @@ void read_joystick(int nr, unsigned int *dir, int *button)
 			}
 #endif
 			else { //button release, pressing sticky keys is possible again.
-				for (int i=0; i<NUM_STICKY; i++)
+				if (vkbd_touch_x == -1 && vkbd_touch_y == -1)
 				{
-					vkbd_sticky_key[i].can_switch=true;
+					for (int i=0; i<NUM_STICKY; i++)
+					{
+						vkbd_sticky_key[i].can_switch=true;
+					}
 				}
 			}
 			// TODO: add vkbd_button2 mapped to button2

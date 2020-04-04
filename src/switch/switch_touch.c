@@ -17,6 +17,9 @@
 
 #include "math.h"
 
+typedef int bool;
+#include "vkbd.h"
+
 static void initTouch();
 static void preprocessEvents(SDL_Event *event);
 static void preprocessFingerDown(SDL_Event *event);
@@ -124,6 +127,14 @@ static void preprocessFingerDown(SDL_Event *event) {
 	// id (for multitouch)
 	SDL_FingerID id = event->tfinger.fingerId;
 
+	if (vkbd_mode) {
+		if (port == 0) {
+			vkbd_touch_x = event->tfinger.x;
+			vkbd_touch_y = event->tfinger.y;
+		}
+		return;
+	}
+
 	int x = lastmx;
 	int y = lastmy;
 
@@ -155,6 +166,15 @@ static void preprocessFingerUp(SDL_Event *event) {
 	SDL_TouchID port = event->tfinger.touchId;
 	// id (for multitouch)
 	SDL_FingerID id = event->tfinger.fingerId;
+
+	if (vkbd_mode) {
+		if (port == 0) {
+			vkbd_touch_x = -1;
+			vkbd_touch_y = -1;
+			vkbd_move &= ~VKBD_BUTTON;
+		}
+		return;
+	}
 
 	// find out how many fingers were down before this event
 	int numFingersDown = 0;
@@ -218,6 +238,9 @@ static void preprocessFingerUp(SDL_Event *event) {
 }
 
 static void preprocessFingerMotion(SDL_Event *event) {
+	if (vkbd_mode)
+		return;
+	
 	// front (0) or back (1) panel
 	SDL_TouchID port = event->tfinger.touchId;
 	// id (for multitouch)

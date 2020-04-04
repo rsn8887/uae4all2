@@ -945,7 +945,7 @@ SDL_ANDROID_SetScreenKeyboardShown(1);
 				{
 					// This works on all CFW
 					WebWifiConfig conf;
-					webWifiCreate(&conf, NULL, "https://github.com/rsn8887/uae4all2/releases/latest", 0, 0);
+					webWifiCreate(&conf, NULL, "https://github.com/rsn8887/uae4all2/releases/latest", (Uuid){0}, 0);
 					webWifiShow(&conf, NULL);
 					// The following would be better, but crashes on SX OS
 					//WebCommonConfig config;

@@ -10,12 +10,17 @@
 
 #include "keyboard.h"
 
+#define MIN(a,b) ((a) < (b) ? (a) : (b))
+
 #define VKBD_MIN_HOLDING_TIME 200
 #define VKBD_MOVE_DELAY 50
 
 extern int keycode2amiga(SDL_keysym *prKeySym);
 
 extern int mainMenu_displayHires;
+extern int mainMenu_displayedLines;
+extern int mainMenu_shader;
+extern int visibleAreaWidth;
 extern int mainMenu_vkbdLanguage;
 extern int mainMenu_vkbdStyle;
 
@@ -41,6 +46,8 @@ t_vkbd_sticky_key vkbd_sticky_key[] =
 int vkbd_let_go_of_direction=0;
 int vkbd_mode=0;
 int vkbd_move=0;
+float vkbd_touch_x=-1;
+float vkbd_touch_y=-1;
 int vkbd_key=KEYCODE_NOTHING;
 SDLKey vkbd_button2=(SDLKey)0; //not implemented
 int vkbd_keysave=KEYCODE_NOTHING;
@@ -182,6 +189,8 @@ static t_vkbd_rect vkbd_rect_US[]=
 	{{211, 61, 14, 11 }, 81,12,89,91, AK_LF},	// 90
 	{{226, 61, 14, 11 }, 82,12,90,92, AK_DN},	// 91 
 	{{241, 61, 14, 11 }, 83,13,91,69, AK_RT},	// 92
+	{{0, 0, 0, 0 }, 0,0,0,0, 0}, // 93
+	{{0, 0, 0, 0 }, 0,0,0,0, 0}, // 94
 };
 
 //UK KEYBOARD
@@ -287,6 +296,7 @@ static t_vkbd_rect vkbd_rect_UK[]=
 	{{241, 61, 14, 11 }, 83,13,91,69, AK_RT},	// 92
 	// UK extra keys
 	{{31, 49, 14, 11 }, 55,86,70,71, AK_LTGT},	// 93	*
+	{{0, 0, 0, 0 }, 0,0,0,0, 0}, // 94
 };
 
 //GERMAN KEYBOARD
@@ -827,12 +837,114 @@ void vkbd_displace_down(void)
 		vkbd_y=prSDLScreen->h-ksur->h;
 }		
 
+int vkbd_touch_xy_to_actual(float touch_x, float touch_y)
+{
+	int x = 0;
+	int y = 0;
+	int x_offset = 0;
+	int y_offset = 0;
+	float scaled_width = 0;
+	float scaled_height = 0;
+#ifdef __PSP2__
+	int display_width = 960;
+	int display_height = 544;
+	//is a shader active?
+	if (mainMenu_shader != 0)
+	{
+		scaled_height = display_height;
+		if (mainMenu_displayHires)
+			scaled_width = (0.5f*(float)visibleAreaWidth*((float)544/(float)mainMenu_displayedLines));
+		else
+			scaled_width = ((float)visibleAreaWidth*((float)544/(float)mainMenu_displayedLines));
+		x_offset = (display_width - scaled_width) / 2;
+		y_offset = (display_height - scaled_height) / 2;
+	}
+	else //otherwise do regular integer 2* scaling without filtering to ensure good picture quality
+	{
+		scaled_height = (float) (2 * mainMenu_displayedLines);
+		if (mainMenu_displayHires)
+			scaled_width = (float) (1 * visibleAreaWidth);
+		else
+			scaled_width = (float) (2 * visibleAreaWidth);
+		x_offset = (display_width - scaled_width) / 2;
+		y_offset = (display_height - scaled_height) / 2;
+	}
+#else
+	int display_width = 1280;
+	int display_height = 720;
+	if (mainMenu_shader == 0) {
+		// integer scaling
+		int screen_width;
+		int screen_height;
+		screen_width = visibleAreaWidth;
+		if (mainMenu_displayHires)
+			screen_height = 2 * mainMenu_displayedLines;			
+		else
+			screen_height = mainMenu_displayedLines;
+		int scale_factor = MIN(display_height / screen_height, display_width / screen_width);
+		scaled_height = scale_factor * screen_height;
+		scaled_width = scale_factor * screen_width;
+	} else {
+		// scale to fit, preserve aspect ratio
+		scaled_height = display_height;
+		if (mainMenu_displayHires)
+				scaled_width = ((visibleAreaWidth * display_height) / (float) (2 * mainMenu_displayedLines));
+		else
+				scaled_width = ((visibleAreaWidth * display_height) / (float) (mainMenu_displayedLines));
+	}
+	// centering
+	x_offset = (display_width - scaled_width) / 2;
+	y_offset = (display_height - scaled_height) / 2;
+#endif
+	x = (((touch_x * display_width) - x_offset) * visibleAreaWidth) / scaled_width;
+	y = (((touch_y * display_height) - y_offset) * mainMenu_displayedLines) / scaled_height;
+	x -= vkbd_x;
+	y -= vkbd_y;
+	if (mainMenu_displayHires)
+		x /= 2;
+
+	for (int i = 0; i < 95; i++)
+	{
+		int x_min = vkbd_rect[i].rect.x;
+		int y_min = vkbd_rect[i].rect.y;
+		int x_max = x_min + vkbd_rect[i].rect.w;
+		int y_max = y_min + vkbd_rect[i].rect.h;
+		if (x_min != 0 && y_min != 0 && x >= x_min-1 && x <= x_max && y >= y_min-1 && y <= y_max)
+			return i;
+	}
+	return -1;
+}
+
 int vkbd_process(void)
 {
 	Uint32 now=SDL_GetTicks();
 	SDL_Rect r;
 	
 	vkbd_redraw();
+
+	if (vkbd_touch_x != -1 && vkbd_touch_y != -1) {
+		int new_vkbd_actual = vkbd_touch_xy_to_actual(vkbd_touch_x, vkbd_touch_y);
+		if (new_vkbd_actual != -1)
+		{
+			vkbd_actual = new_vkbd_actual;
+			vkbd_move = VKBD_BUTTON;
+			// draw key dark while touched
+			if (mainMenu_displayHires)
+			{
+				r.x=vkbd_x+2*vkbd_rect[vkbd_actual].rect.x;
+				r.w=2*vkbd_rect[vkbd_actual].rect.w;
+			}
+			else
+			{
+				r.x=vkbd_x+vkbd_rect[vkbd_actual].rect.x;
+				r.w=vkbd_rect[vkbd_actual].rect.w;
+			}
+			r.y=vkbd_y+vkbd_rect[vkbd_actual].rect.y;
+			r.h=vkbd_rect[vkbd_actual].rect.h;
+			SDL_FillRect(prSDLScreen,&r,vkbd_color);
+		}
+	}
+
 	if (vkbd_move&VKBD_BUTTON)
 	{
 		vkbd_move=0;

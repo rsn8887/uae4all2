@@ -11,6 +11,8 @@ typedef int bool;
 #define false 0;
 #define true 1;
 
+#include "vkbd.h"
+
 SceTouchData touch_old[SCE_TOUCH_PORT_MAX_NUM];
 SceTouchData touch[SCE_TOUCH_PORT_MAX_NUM];
 
@@ -237,6 +239,14 @@ void psp2ProcessFingerDown(TouchEvent *event) {
 	// id (for multitouch)
 	int id = event->tfinger.fingerId;
 
+	if (vkbd_mode) {
+		if (port == 0) {
+			vkbd_touch_x = event->tfinger.x;
+			vkbd_touch_y = event->tfinger.y;
+		}
+		return;
+	}
+
 	int x = lastmx;
 	int y = lastmy;
 
@@ -266,6 +276,15 @@ void psp2ProcessFingerUp(TouchEvent *event) {
 	int port = event->tfinger.touchId;
 	// id (for multitouch)
 	int id = event->tfinger.fingerId;
+
+	if (vkbd_mode) {
+		if (port == 0) {
+			vkbd_touch_x = -1;
+			vkbd_touch_y = -1;
+			vkbd_move &= ~VKBD_BUTTON;
+		}
+		return;
+	}
 
 	// find out how many fingers were down before this event
 	int numFingersDown = 0;
@@ -331,6 +350,9 @@ void psp2ProcessFingerUp(TouchEvent *event) {
 }
 
 void psp2ProcessFingerMotion(TouchEvent *event) {
+	if (vkbd_mode)
+		return;
+
 	// front (0) or back (1) panel
 	int port = event->tfinger.touchId;
 	// id (for multitouch)
