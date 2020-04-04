@@ -79,10 +79,10 @@ extern char filename3[256];
 extern char config_load_filename[300];
 
 #ifdef __PSP2__
-static const char *text_str_title=    "----- UAE4All Vita -----";
+static const char *text_str_title=    "----- UAE4All Vita " VERSION_MAJOR "." VERSION_MINOR " -----";
 #else
 #ifdef __SWITCH__
-static const char *text_str_title=    "----- UAE4All Switch -----";
+static const char *text_str_title=    "----- UAE4All Switch " VERSION_MAJOR "." VERSION_MINOR " -----";
 #else
 #ifdef PANDORA
 static const char *text_str_title=    "----- UAE4All Pandora -----";

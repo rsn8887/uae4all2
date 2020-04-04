@@ -143,6 +143,8 @@ if(BUILD_PSP2)
           -DUSE_UAE4ALL_VKBD
           -DUSE_ARMV7
           -DUSE_ARMNEON
+          -DVERSION_MAJOR=\"${VERSION_MAJOR}\"
+          -DVERSION_MINOR=\"${VERSION_MINOR}\"
           -marm -mfpu=neon -mtune=cortex-a9 -mfloat-abi=hard -ffast-math
           -fno-asynchronous-unwind-tables -funroll-loops
           -mword-relocations -fno-unwind-tables -fno-optimize-sibling-calls
@@ -225,6 +227,8 @@ if(BUILD_NX)
     -DTHUMB_PREFIX=\"./thumbs/\"
     -DTMP_PREFIX=\"./tmp/\"
     -DUSE_UAE4ALL_VKBD
+    -DVERSION_MAJOR=\"${VERSION_MAJOR}\"
+    -DVERSION_MINOR=\"${VERSION_MINOR}\"
   )
 
   set(FLAGS
