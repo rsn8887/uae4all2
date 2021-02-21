@@ -255,17 +255,11 @@ void real_main (int argc, char **argv)
 #endif
 
 #if defined(__PSP2__) // NOT __SWITCH__
-	//Initialize ShellUtil to allow us to disable "PS" Button (corrupts hdf files)
-	sceShellUtilInitEvents(0);
-	// prevent suspend (corrupts hdf files)
-	sceKernelPowerTick(SCE_KERNEL_POWER_TICK_DISABLE_AUTO_SUSPEND);
-	sceKernelPowerTick(SCE_KERNEL_POWER_TICK_DISABLE_OLED_OFF);
 	//Initialize touch panels
 	psp2InitTouch();
 #endif
 
 #if defined(__SWITCH__)
-    appletLockExit();
     socketInitializeDefault();
 #endif
 

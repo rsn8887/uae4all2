@@ -113,8 +113,6 @@ void exit_safely(int quit_via_home) {
 #ifdef __SWITCH__
     mainMenu_singleJoycons = 0;
     update_joycon_mode();
-    if (quit_via_home)
-        appletUnlockExit();
 #endif
     exit(0);
 }

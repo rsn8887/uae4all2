@@ -89,11 +89,6 @@ void SWITCH_HandleTouch(SDL_Event *event) {
 
 static void preprocessEvents(SDL_Event *event) {
 
-#if defined(__vita__)
-	// prevent suspend (scummvm games contain a lot of cutscenes..)
-	sceKernelPowerTick(SCE_KERNEL_POWER_TICK_DISABLE_AUTO_SUSPEND);
-	sceKernelPowerTick(SCE_KERNEL_POWER_TICK_DISABLE_OLED_OFF);
-#endif
 	// Supported touch gestures:
 	// left mouse click: single finger short tap
 	// right mouse click: second finger short tap while first finger is still down
