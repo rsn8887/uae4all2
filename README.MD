@@ -4,9 +4,9 @@ On the Switch, since v1.84, please use nsp injection to start uae4all2, otherwis
 
 Recent Changes
 ======
-1.99
+2.00
 
-- allow touch input to control on-screen keyboard in addition to dpad
+- allow suspend/resume again. On Switch, it was fixed in SDK. On Vita, please install fdfix plugin to prevent corruption on resume.
 
 Description
 =====
@@ -317,6 +317,10 @@ Compiling
 
 CHANGELOG
 =====
+2.00
+
+- allow suspend/resume again. On Switch, it was fixed in SDK. On Vita, please install fdfix plugin to prevent corruption on resume.
+
 1.99
 
 - allow touch input to control on-screen keyboard, in addition to dpad
