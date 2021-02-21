@@ -6,7 +6,7 @@ Recent Changes
 ======
 2.00
 
-- allow suspend/resume again. On Switch, it was fixed in SDK. On Vita, please install fdfix plugin to prevent corruption on resume.
+- allow suspend/resume again. On Switch, it was fixed in SDK. On Vita, please install fd_fix plugin to prevent corruption on resume.
 
 Description
 =====
