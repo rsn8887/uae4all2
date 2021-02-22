@@ -207,53 +207,50 @@ int no_limiter = 0;
 int singleJoycons = 0;  // are single Joycons being used at the moment?
 void update_joycon_mode() {
 	int handheld = hidGetHandheldMode();
-	int coalesceControllers = 0;
-	int splitControllers = 0;
 	if (!handheld) {
 		if (mainMenu_singleJoycons) {
 			if (!singleJoycons) {
-				splitControllers = 1;
 				singleJoycons = 1;
+				for (int id=0; id<8; id++) {
+					hidSetNpadJoyHoldType(HidNpadJoyHoldType_Horizontal);
+					hidScanInput();
+					hidSetNpadJoyAssignmentModeSingleByDefault((HidNpadIdType) id);
+				}
 			}
 		} else if (singleJoycons) {
-			coalesceControllers = 1;
 			singleJoycons = 0;
+
+			// find all left/right single JoyCon pairs and join them together
+			for (int id = 0; id < 8; id++) {
+				hidSetNpadJoyHoldType(HidNpadJoyHoldType_Vertical);
+			}
+			int lastRightId = 8;		
+			for (int id0 = 0; id0 < 8; id0++) {
+				if (hidGetNpadStyleSet((HidNpadIdType) id0) & HidNpadStyleTag_NpadJoyLeft ) {
+					for (int id1=lastRightId-1; id1>=0; id1--) {
+						if (hidGetNpadStyleSet((HidNpadIdType) id1) & HidNpadStyleTag_NpadJoyRight ) {
+							lastRightId=id1;
+							// prevent missing player numbers
+							if (id0 < id1) {
+								hidMergeSingleJoyAsDualJoy((HidNpadIdType) id0, (HidNpadIdType) id1);
+							} else if (id0 > id1) {
+								hidMergeSingleJoyAsDualJoy((HidNpadIdType) id1, (HidNpadIdType) id0);
+							}
+							break;
+						}
+					}
+				}
+			}
 		}
 	} else {
 		if (singleJoycons) {
-			coalesceControllers = 1;
 			singleJoycons = 0;
+			for (int id=0; id<8; id++) {
+				hidSetNpadJoyHoldType(HidNpadJoyHoldType_Vertical);
+				hidScanInput();
+				hidSetNpadJoyAssignmentModeDual((HidNpadIdType) id);
+			}
 		}
-	}
-	if (coalesceControllers) {
-		// find all left/right single JoyCon pairs and join them together
-		for (int id = 0; id < 8; id++) {
-			hidSetNpadJoyAssignmentModeDual((HidControllerID) id);
-		}
-		int lastRightId = 8;		
-		for (int id0 = 0; id0 < 8; id0++) {
-			if (hidGetControllerType((HidControllerID) id0) & TYPE_JOYCON_LEFT) {
-				for (int id1=lastRightId-1; id1>=0; id1--) {
-					if (hidGetControllerType((HidControllerID) id1) & TYPE_JOYCON_RIGHT) {
-						lastRightId=id1;
-						// prevent missing player numbers
-						if (id0 < id1) {
-							hidMergeSingleJoyAsDualJoy((HidControllerID) id0, (HidControllerID) id1);
-						} else if (id0 > id1) {
-							hidMergeSingleJoyAsDualJoy((HidControllerID) id1, (HidControllerID) id0);
-						}
-						break;
-					}
-				}
-			}	
-		}
-	}
-	if (splitControllers) {
-		for (int id=0; id<8; id++) {
-			hidSetNpadJoyAssignmentModeSingleByDefault((HidControllerID) id);
-		}
-		hidSetNpadJoyHoldType(HidJoyHoldType_Horizontal);
-		hidScanInput();
 	}
 }
 #endif
@@ -708,10 +705,6 @@ void gui_handle_events (void)
 		triggerR3[i] = SDL_JoystickGetButton(currentJoy, PAD_R3);
 
 		if (singleJoycons) {
-			HidControllerType type;
-			HidControllerID id = (HidControllerID) i;
-			type = hidGetControllerType(id);
-
 			joyX=lX;
 			joyY=-lY;
 
@@ -727,9 +720,7 @@ void gui_handle_events (void)
 			triggerR2[i] = 0;
 			
 			if (i == 0) {
-				if (type == TYPE_JOYCON_RIGHT) {
-					buttonSelect[0] = buttonStart[0];
-				}
+				buttonSelect[0] |= buttonStart[0];
 				buttonStart[0] = triggerL[0];
 
 				// push player 1 joystick in for mouse movement or keyboard adjustment

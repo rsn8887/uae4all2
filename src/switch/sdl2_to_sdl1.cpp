@@ -37,7 +37,7 @@ int isDocked() {
 		case AppletOperationMode_Handheld:
 			return 0;
 			break;
-		case AppletOperationMode_Docked:
+		case AppletOperationMode_Console:
 			return 1;
 			break;
 		default:
