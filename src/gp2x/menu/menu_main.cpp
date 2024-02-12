@@ -78,6 +78,8 @@ extern char filename3[256];
 
 extern char config_load_filename[300];
 
+extern bool resetOnStartingApp;
+
 #ifdef __PSP2__
 static const char *text_str_title=    "----- UAE4All Vita " VERSION_MAJOR "." VERSION_MINOR " -----";
 #else
@@ -1019,10 +1021,18 @@ int run_mainMenu()
 		raise_mainMenu();
 		end=0;
 		draw_mainMenu(c);
-		while(!end)
+		if (!resetOnStartingApp)
+		{ 
+			while(!end)
+			{
+				draw_mainMenu(c);
+				end=key_mainMenu(&c);
+			}
+		}
+		else
 		{
-			draw_mainMenu(c);
-			end=key_mainMenu(&c);
+			mainMenu_case = MAIN_MENU_CASE_RESET;
+			resetOnStartingApp = false;
 		}
 		unraise_mainMenu();
 		switch(mainMenu_case)

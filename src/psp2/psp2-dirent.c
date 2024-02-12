@@ -33,7 +33,7 @@ DEALINGS IN THE SOFTWARE.
 
 #define SCE_ERRNO_MASK 0xFF
 
-int mkdir(const char *path, mode_t mode)
+/*int mkdir(const char *path, mode_t mode)
 {
 	return sceIoMkdir(path, 0777);
 }
@@ -42,7 +42,7 @@ int rmdir(const char *path)
 {
 	return sceIoRmdir(path);
 }
-
+*/
 struct DIR_
 {
 	SceUID uid;

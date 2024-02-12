@@ -66,6 +66,8 @@ extern SDL_Surface *current_screenshot;
 #include <psp2/shellutil.h>
 //Touch input
 #include "psp2_touch.h"
+//Custom bubble
+#include <psp2/appmgr.h>
 #ifdef DEBUG_UAE4ALL
 #include <psp2shell.h>
 #endif
@@ -89,6 +91,9 @@ int64_t g_uae_epoch = 0;
 struct gui_info gui_data;
 
 char warning_buffer[256];
+
+bool resetOnStartingApp = false;
+extern char config_load_filename[300];
 
 /* If you want to pipe printer output to a file, put something like
  * "cat >>printerfile.tmp" above.
@@ -300,16 +305,30 @@ void real_main (int argc, char **argv)
 #ifdef GP2X
     gp2x_init(argc, argv);
 #endif
-		// Set everthing to default and clear HD settings
-		SetDefaultMenuSettings(1);
-    
-     loadconfig (1);
+	// Set everthing to default and clear HD settings
+	SetDefaultMenuSettings(1);
+    //Check if UAE4All2 was launched by a custom bubble
+#if defined(__SWITCH__)
+    if (argc == 2) {
+        snprintf(config_load_filename, 300, argv[1]);
+        resetOnStartingApp = true;
+    }
+#endif
+#if defined(__PSP2__) // NOT __SWITCH__
+    char boot_params[1024];
+    sceAppMgrGetAppParam(boot_params);
+	if (strstr(boot_params,"psgm:play") && strstr(boot_params, "&param=")) {
+		snprintf(config_load_filename, 300, strstr(boot_params, "&param=") + 7);
+        resetOnStartingApp = true;
+    }
+#endif
+    loadconfig (1);
     if (! graphics_setup ()) {
-		exit (1);
+	    exit (1);
     }
     rtarea_init ();
 
-	hardfile_install();
+    hardfile_install();
 
     if (! setup_sound ()) {
 		write_log ("Sound driver unavailable: Sound output disabled\n");

@@ -159,7 +159,7 @@ if(BUILD_PSP2)
           SceSysmodule_stub SceDisplay_stub SceGxm_stub
           SceCtrl_stub ScePgf_stub ScePower_stub SceCommonDialog_stub
           SceAudio_stub SceShellSvc_stub SceHid_stub SceTouch_stub png jpeg z m c
-          SceAppUtil_stub
+          SceAppUtil_stub SceAppMgr_stub
   )
 
   if (BUILD_DEBUG)
@@ -178,7 +178,7 @@ if(BUILD_PSP2)
 
   vita_create_self(${PROJECT_NAME}.self ${PROJECT_NAME} ${UNSAFE_FLAG})
   add_custom_target(${PROJECT_NAME}.vpk
-          DEPENDS ${PROJECT_NAME}.self
+          DEPENDS ${PROJECT_NAME}.self-self
           COMMAND rm -rf vpk && mkdir -p vpk/sce_sys
           COMMAND ${VITASDK}/bin/vita-mksfoex -s TITLE_ID=${TITLEID} "${PROJECT_NAME}" vpk/sce_sys/param.sfo
           COMMAND cp ${PROJECT_NAME}.self vpk/eboot.bin

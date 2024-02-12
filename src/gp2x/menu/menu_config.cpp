@@ -1514,7 +1514,13 @@ void loadconfig(int general)
     }
 
     if (general == 1)
-        snprintf(path, 300, "%s/conf/uaeconfig.conf", launchDir);
+        if (config_load_filename[0] != 0) {
+            // custom config was specified as command line argument 
+            snprintf(path, 300, "%s",config_load_filename);
+        }
+        else {
+            snprintf(path, 300, "%s/conf/uaeconfig.conf", launchDir);
+        }
     else if (general == 3)
         snprintf(path, 300, config_filename, launchDir);
     else if(general == 0)

@@ -206,14 +206,18 @@ int no_limiter = 0;
 #ifdef __SWITCH__
 int singleJoycons = 0;  // are single Joycons being used at the moment?
 void update_joycon_mode() {
-	int handheld = hidGetHandheldMode();
+	int handheld;
+	if (appletGetOperationMode() == AppletOperationMode_Handheld)
+		handheld = 1;
+	else
+		handheld = 0;
 	if (!handheld) {
 		if (mainMenu_singleJoycons) {
 			if (!singleJoycons) {
 				singleJoycons = 1;
 				for (int id=0; id<8; id++) {
 					hidSetNpadJoyHoldType(HidNpadJoyHoldType_Horizontal);
-					hidScanInput();
+					//hidScanInput();
 					hidSetNpadJoyAssignmentModeSingleByDefault((HidNpadIdType) id);
 				}
 			}
@@ -247,7 +251,7 @@ void update_joycon_mode() {
 			singleJoycons = 0;
 			for (int id=0; id<8; id++) {
 				hidSetNpadJoyHoldType(HidNpadJoyHoldType_Vertical);
-				hidScanInput();
+				//hidScanInput();
 				hidSetNpadJoyAssignmentModeDual((HidNpadIdType) id);
 			}
 		}

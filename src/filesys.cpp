@@ -410,8 +410,11 @@ struct uaedev_mount_info *dup_mountinfo (struct uaedev_mount_info *mip)
 	    uip->volname = my_strdup (uip->volname);
 	if (uip->rootdir)
 	    uip->rootdir = my_strdup (uip->rootdir);
+#if !(defined __PSP2__)
+	// Broken in latest VitaSDK 20240214 (fdopen returns 0), causing crashes with hdf
 	if (uip->hf.fd)
 	    uip->hf.fd = fdopen ( dup (fileno (uip->hf.fd)), uip->readonly ? "rb" : "r+b");
+#endif
     }
     return i2;
 }
