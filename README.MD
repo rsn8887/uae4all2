@@ -30,7 +30,7 @@ Thanks to CrashMidnick for the French virtual keyboard.
 
 Thanks to the original authors Chui, john4p, TomB, notaz, Bernd Schneider, Toni Wilen, Pickle, smoku, AnotherGuest, Anonymous engineer, finkel, Lubomyr, pelya and many more.
 
-Thanks to my supporters on Patreon: Andyways, Count Duckula, Jesse Harlin, Özgür Karter, Matthew Machnee, Mored4u, Ibrahim Fazel Poor, and RadicalR.
+Thanks to my Patreon supporters: Jesse Harlin, Mored4u, RadicalR.
 
 Installation
 ======
@@ -163,7 +163,7 @@ Pressing stick while moving it = change keyboard transparency/position, control 
 SR + SL + Stick directions = hotkey to quick-zoom image and center image vertically (player 1 only)  
 
 Physical Keyboard / Mouse controls
------
+======
 On Vita (Bluetooth): Mouse + keyboard tested working with the "Jelly Comb Mini Bluetooth Keyboard With Mouse Touchpad, ASIN:B06Y56BBYP," and with the "Jelly Comb Bluetooth Wireless Mouse ASIN:B075HBDWCF." The Amiga keys are mapped to Windows (GUI) keys as well as Page Up/Down. The Vita doesn't pair with all Bluetooth keyboards and mice. As a rule, if the keyboard works to highlight bubbles with cursor keys, it should also work in UAE4All.
 
 On Switch (USB): All keyboards seem to work. Not all mice seem to work. [Mouse compatibility sheet](https://docs.google.com/spreadsheets/d/1Drbo5-QuSX901MwtOytSMuqRGxeIkq2HELM806I9dj0/edit#gid=0) 
