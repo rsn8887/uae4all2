@@ -4,9 +4,9 @@ On the Switch, since v1.84, please use Application mode, not Applet mode, to sta
 
 Recent Changes
 ======
-2.00
+2.10
 
-- allow suspend/resume again. On Switch, it was fixed in SDK. On Vita, please install fd_fix plugin to prevent corruption on resume.
+- allow autostarting of config file via command line argument. On Switch, the same forwarder that works with RetroArch can be used. On Vita, a custom bubble builder is provided. It uses the same method as DaedalusX.
 
 Description
 =====
@@ -168,6 +168,31 @@ On Vita (Bluetooth): Mouse + keyboard tested working with the "Jelly Comb Mini B
 
 On Switch (USB): All keyboards seem to work. Not all mice seem to work. [Mouse compatibility sheet](https://docs.google.com/spreadsheets/d/1Drbo5-QuSX901MwtOytSMuqRGxeIkq2HELM806I9dj0/edit#gid=0) 
 
+Custom Bubble / Forwarder
+------
+To autostart a game config via a custom bubble (Vita) or forwarder (Switch), I used the following steps with the example game Superfrog:
+
+Switch:
+- I started the emulator normally
+- I inserted Superfrog disk 1
+- I saved a config with name "superfrog" using the Config - Save As option in UAE4All2
+- I checked that the config was saved to my SD card with the full name /switch/uae4all2/conf/superfrog.conf
+- I then made myself a forwarder with a Superfrog Icon, using the online forwarder tool that also works for RetroArch, with the following options
+- Core: /switch/uae4all2/uae4all2.nro
+- Rom: /switch/uae4all2/conf/superfrog.conf
+- When I started the forwarder, Superfrog automatically launched.
+
+Vita:
+- I started the emulator normally
+- I inserted Superfrog disk 1
+- I saved a config with name "superfrog" using the Config - Save As option in UAE4All2
+- I checked that the config was saved to my SD card with the full name ux0:/data/uae4all/conf/superfrog.conf
+- I then used the provided build.bat file on Windows with the following options
+- Bubble Name: Superfrog
+- Conf Name: ux0:/data/uae4all/conf/superfrog.conf
+- TitleID: SUPERFROG
+- When I started the custom bubble, Superfrog automatically launched  
+
 Notes
 ======
 - *Bios:* Please put kickstart files in `ux0:/data/uae4all/kickstarts` on Vita and in `/switch/uae4all2/kickstarts` directory on Switch. Files must be named as `kick13.rom` (for Amiga 500), and `kick31.rom` (for Amiga 1200). Optionally, `kick12.rom`, `kick20.rom`, and `kickcustom.rom` (any user supplied file, e.g. version 3.1.4 or anything else), can also be supplied.
@@ -317,6 +342,10 @@ Compiling
 
 CHANGELOG
 =====
+2.10
+
+- allow autostarting of config file via command line argument. On Switch, the same forwarder that works with RetroArch can be used. On Vita, a custom bubble builder is provided. It uses the same method as DaedalusX.
+
 2.00
 
 - allow suspend/resume again. On Switch, it was fixed in SDK. On Vita, please install fdfix plugin to prevent corruption on resume.
