@@ -8,7 +8,7 @@
 #endif
 
 #if defined(__SWITCH__)
-#define SCE_TOUCH_PORT_MAX_NUM 1
+#define SCE_TOUCH_PORT_MAX_NUM 2
 #define displayWidth 1280.0
 #define displayHeight 720.0
 #endif
@@ -96,10 +96,10 @@ static void preprocessEvents(SDL_Event *event) {
 	// left button drag and drop: dual finger drag
 	// right button drag and drop: triple finger drag
 	if (event->type == SDL_FINGERDOWN || event->type == SDL_FINGERUP || event->type == SDL_FINGERMOTION) {
-		// front (0) or back (1) panel
+		// front port id is 1 on Switch
 		SDL_TouchID port = event->tfinger.touchId;
 		if (port < SCE_TOUCH_PORT_MAX_NUM && port >= 0) {
-			if (port == 0 || psp2RearTouch) {
+			if (port == 1) {
 				switch (event->type) {
 				case SDL_FINGERDOWN:
 					preprocessFingerDown(event);
@@ -117,13 +117,13 @@ static void preprocessEvents(SDL_Event *event) {
 }
 
 static void preprocessFingerDown(SDL_Event *event) {
-	// front (0) or back (1) panel
+	// front port id is 1 on Switch
 	SDL_TouchID port = event->tfinger.touchId;
 	// id (for multitouch)
 	SDL_FingerID id = event->tfinger.fingerId;
 
 	if (vkbd_mode) {
-		if (port == 0) {
+		if (port == 1) {
 			vkbd_touch_x = event->tfinger.x;
 			vkbd_touch_y = event->tfinger.y;
 		}
@@ -157,13 +157,13 @@ static void preprocessFingerDown(SDL_Event *event) {
 }
 
 static void preprocessFingerUp(SDL_Event *event) {
-	// front (0) or back (1) panel
+	//front port id is 1 on Switch
 	SDL_TouchID port = event->tfinger.touchId;
 	// id (for multitouch)
 	SDL_FingerID id = event->tfinger.fingerId;
 
 	if (vkbd_mode) {
-		if (port == 0) {
+		if (port == 1) {
 			vkbd_touch_x = -1;
 			vkbd_touch_y = -1;
 			vkbd_move &= ~VKBD_BUTTON;
@@ -236,7 +236,7 @@ static void preprocessFingerMotion(SDL_Event *event) {
 	if (vkbd_mode)
 		return;
 	
-	// front (0) or back (1) panel
+	// front port id is 1 on Switch
 	SDL_TouchID port = event->tfinger.touchId;
 	// id (for multitouch)
 	SDL_FingerID id = event->tfinger.fingerId;

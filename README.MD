@@ -4,6 +4,10 @@ On the Switch, since v1.84, please use Application mode, not Applet mode, to sta
 
 Recent Changes
 ======
+2.11 (Switch only)
+
+- fix touch input on Switch
+
 2.10
 
 - allow autostarting of config file via command line argument. On Switch, the same forwarder that works with RetroArch can be used. On Vita, a custom bubble builder is provided. It uses the same method as DaedalusX.
@@ -163,13 +167,13 @@ Pressing stick while moving it = change keyboard transparency/position, control 
 SR + SL + Stick directions = hotkey to quick-zoom image and center image vertically (player 1 only)  
 
 Physical Keyboard / Mouse controls
-======
+-----
 On Vita (Bluetooth): Mouse + keyboard tested working with the "Jelly Comb Mini Bluetooth Keyboard With Mouse Touchpad, ASIN:B06Y56BBYP," and with the "Jelly Comb Bluetooth Wireless Mouse ASIN:B075HBDWCF." The Amiga keys are mapped to Windows (GUI) keys as well as Page Up/Down. The Vita doesn't pair with all Bluetooth keyboards and mice. As a rule, if the keyboard works to highlight bubbles with cursor keys, it should also work in UAE4All.
 
 On Switch (USB): All keyboards seem to work. Not all mice seem to work. [Mouse compatibility sheet](https://docs.google.com/spreadsheets/d/1Drbo5-QuSX901MwtOytSMuqRGxeIkq2HELM806I9dj0/edit#gid=0) 
 
 Custom Bubble / Forwarder
-------
+======
 To autostart a game config via a custom bubble (Vita) or forwarder (Switch), I used the following steps with the example game Superfrog:
 
 Switch:
@@ -187,7 +191,7 @@ Vita:
 - I inserted Superfrog disk 1
 - I saved a config with name "superfrog" using the Config - Save As option in UAE4All2
 - I checked that the config was saved to my SD card with the full name ux0:/data/uae4all/conf/superfrog.conf
-- I then used the provided build.bat file on Windows with the following options
+- I then used the provided build.bat file on Windows (unzip the provided file builder.zip) with the following options
 - Bubble Name: Superfrog
 - Conf Name: ux0:/data/uae4all/conf/superfrog.conf
 - TitleID: SUPERFROG
@@ -342,6 +346,10 @@ Compiling
 
 CHANGELOG
 =====
+2.11 (Switch only)
+
+- fix touch input on Switch
+
 2.10
 
 - allow autostarting of config file via command line argument. On Switch, the same forwarder that works with RetroArch can be used. On Vita, a custom bubble builder is provided. It uses the same method as DaedalusX.
