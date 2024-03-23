@@ -4,6 +4,10 @@ On the Switch, since v1.84, please use Application mode, not Applet mode, to sta
 
 Recent Changes
 ======
+2.12 (Switch only)
+
+- fix regression causing stuttery audio after suspend by linking with fixed SDL2
+
 2.11 (Switch only)
 
 - fix touch input on Switch
@@ -346,6 +350,10 @@ Compiling
 
 CHANGELOG
 =====
+2.12 (Switch only)
+
+- fix regression causing stuttery audio after suspend by linking with fixed SDL2
+
 2.11 (Switch only)
 
 - fix touch input on Switch
